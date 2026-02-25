@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Python: Aleatoriedad y Operaciones con Matrices</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f0f2f5;
+            padding: 20px;
+            color: #1e1e2f;
+        }
+        .container {
+            max-width: 1300px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 24px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+            overflow: hidden;
+        }
+        .tabs {
+            display: flex;
+            flex-wrap: wrap;
+            background: #2d3e50;
+            padding: 0 20px;
+            gap: 4px;
+        }
+        .tab-button {
+            background: transparent;
+            border: none;
+            color: #e0e0e0;
+            padding: 16px 24px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+            border-bottom: 3px solid transparent;
+            letter-spacing: 0.3px;
+        }
+        .tab-button:hover {
+            color: white;
+            background: #3a4f63;
+        }
+        .tab-button.active {
+            color: white;
+            border-bottom: 3px solid #ffb347;
+            background: linear-gradient(0deg, #3a4f63, transparent);
+        }
+        .tab-content {
+            padding: 30px 30px;
+            background: #ffffff;
+            min-height: 600px;
+            max-height: 800px;
+            overflow-y: auto;
+        }
+        .tab-pane {
+            display: none;
+        }
+        .tab-pane.active {
+            display: block;
+        }
+
+        /* Estilos para la historia */
+        .history p {
+            font-size: 1.1rem;
+            line-height: 1.7;
+            margin-bottom: 1.5rem;
+            text-align: justify;
+            background: #f9fafc;
+            padding: 20px;
+            border-radius: 18px;
+            box-shadow: inset 0 2px 5px rgba(0,0,0,0.02);
+        }
+        .history p:first-child {
+            margin-top: 0;
+        }
+        h2 {
+            font-size: 2rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            color: #1e3c5c;
+            border-left: 8px solid #ffb347;
+            padding-left: 20px;
+        }
+        h3 {
+            font-size: 1.5rem;
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+            color: #2d3e50;
+        }
+
+        /* comandos tabla */
+        .cmd-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 25px 0;
+            font-size: 0.95rem;
+            box-shadow: 0 0 20px rgba(0,0,0,0.05);
+            border-radius: 16px;
+            overflow: hidden;
+        }
+        .cmd-table th {
+            background-color: #2d3e50;
+            color: white;
+            font-weight: 600;
+            padding: 14px 12px;
+            text-align: left;
+        }
+        .cmd-table td {
+            padding: 14px 12px;
+            border-bottom: 1px solid #e0e0e0;
+            background-color: #fafbfc;
+            vertical-align: top;
+        }
+        .cmd-table tr:last-child td {
+            border-bottom: none;
+        }
+        .cmd-table td:first-child {
+            font-family: 'Courier New', Courier, monospace;
+            font-weight: 600;
+            color: #c7254e;
+            background-color: #f9f2f4;
+            width: 30%;
+        }
+        .code-inline {
+            background: #1e1e2f;
+            color: #ffcb6b;
+            padding: 4px 8px;
+            border-radius: 8px;
+            font-family: 'JetBrains Mono', 'Courier New', monospace;
+            font-size: 0.9rem;
+        }
+        .note {
+            background: #e7f1fa;
+            padding: 15px 20px;
+            border-radius: 16px;
+            border-left: 5px solid #2d3e50;
+            margin: 20px 0;
+        }
+
+        /* visor pdf */
+        .pdf-viewer {
+            width: 100%;
+            height: 700px;
+            border: none;
+            border-radius: 20px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+        }
+
+        hr {
+            margin: 2rem 0;
+            border: 1px dashed #ccc;
+        }
+
+        @media (max-width: 700px) {
+            .tabs { flex-direction: column; }
+            .tab-button { width: 100%; }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="tabs">
+        <button class="tab-button active" data-tab="historia">📜 Historia aleatorios</button>
+        <button class="tab-button" data-tab="comandos">🧮 Comandos matrices</button>
+        <button class="tab-button" data-tab="pdf-operaciones">📁 PDF: Operaciones matrices</button>
+        <button class="tab-button" data-tab="pdf-random">🎲 PDF: Tipos de random</button>
+    </div>
+
+    <div class="tab-content">
+        <!-- Pestaña 1: Historia números aleatorios -->
+        <div class="tab-pane active" id="historia">
+            <h2>📖 Breve historia de los números aleatorios en Python</h2>
+            <div class="history">
+                <p>Desde sus primeras versiones, Python incorporó la generación de números seudoaleatorios a través del módulo <span class="code-inline">random</span>, basado en el algoritmo Mersenne Twister. Este generador, diseñado en 1997 por Makoto Matsumoto y Takuji Nishimura, ofrece un período enorme de 2<sup>19937</sup>-1 y una distribución uniforme, siendo ideal para simulaciones, juegos y pruebas. La comunidad adoptó rápidamente <span class="code-inline">random</span> por su simplicidad: <span class="code-inline">random.random()</span>, <span class="code-inline">randint</span> o <span class="code-inline">choice</span> se volvieron herramientas cotidianas. Sin embargo, esta aleatoriedad es predecible si se conoce la semilla, lo que la hace inadecuada para contextos sensibles.</p>
+                <p>Con la madurez de Python y el auge de la ciberseguridad, en la versión 3.6 se introdujo el módulo <span class="code-inline">secrets</span>, diseñado específicamente para generar tokens criptográficamente seguros. Mientras que <span class="code-inline">random</span> usa una semilla determinista, <span class="code-inline">secrets</span> recurre a fuentes de entropía del sistema operativo (<span class="code-inline">/dev/urandom</span> en Linux, <span class="code-inline">CryptGenRandom</span> en Windows). Esto marcó un hito: por primera vez Python ofrecía en la librería estándar una forma clara y recomendada de crear contraseñas, tokens de autenticación o claves seguras. La distinción entre "aleatoriedad para simulación" y "aleatoriedad para seguridad" quedó formalizada.</p>
+                <p>El ecosistema científico también impulsó la evolución. NumPy, la biblioteca fundamental para cómputo numérico, incorporó su propio submódulo <span class="code-inline">numpy.random</span> con generadores vectorizados y distribuciones estadísticas (normal, exponencial, etc.). En 2019, con NumPy 1.17, se adoptó un sistema basado en generadores (<span class="code-inline">Generator</span> y <span class="code-inline">default_rng</span>) que permiten mayor control, velocidad y la posibilidad de usar distintos algoritmos (como PCG64). Hoy, Python ofrece un ecosistema completo: desde <span class="code-inline">random</span> para scripting, <span class="code-inline">secrets</span> para seguridad, hasta <span class="code-inline">np.random.Generator</span> para big data y machine learning, consolidando más de dos décadas de evolución en aleatoriedad.</p>
+            </div>
+        </div>
+
+        <!-- Pestaña 2: Comandos para operar matrices (igual/diferente tamaño) -->
+        <div class="tab-pane" id="comandos">
+            <h2>🧰 Comandos para operar matrices (cualquier dimensión)</h2>
+            <p class="note">⚡ Todos los comandos asumen <span class="code-inline">import numpy as np</span>. Las matrices pueden ser de diferentes tamaños siempre que la operación lo permita (ej. producto matricial requiere dimensiones compatibles).</p>
+
+            <h3>➕ Suma y resta</h3>
+            <table class="cmd-table">
+                <tr><th>Operación / comando</th><th>Descripción / ejemplo</th></tr>
+                <tr><td>A + B</td><td>Suma elemento a elemento. <strong>Mismas dimensiones</strong>.<br><span class="code-inline">C = A + B</span></td></tr>
+                <tr><td>A - B</td><td>Resta elemento a elemento. <strong>Mismas dimensiones</strong>.<br><span class="code-inline">C = A - B</span></td></tr>
+                <tr><td>np.add(A, B)</td><td>Función equivalente a suma.</td></tr>
+            </table>
+
+            <h3>✖️ Multiplicación (elemento a elemento / matricial / escalar)</h3>
+            <table class="cmd-table">
+                <tr><th>Comando</th><th>Descripción</th></tr>
+                <tr><td>A * B</td><td>Multiplicación elemento a elemento (producto de Hadamard). <strong>Mismas dimensiones</strong>.</td></tr>
+                <tr><td>A @ B  <br> np.dot(A, B) <br> np.matmul(A, B)</td><td>Multiplicación matricial (producto punto). <br> <em>columnas de A deben coincidir con filas de B</em>. Válido para matrices de diferente tamaño si son compatibles.</td></tr>
+                <tr><td>escalar * A  <br> np.multiply(escalar, A)</td><td>Multiplicación por un escalar (broadcasting automático).</td></tr>
+                <tr><td>A.dot(B)</td><td>Método de objeto para producto punto.</td></tr>
+            </table>
+
+            <h3>🔄 Transpuesta, redimensiones y reshaping</h3>
+            <table class="cmd-table">
+                <tr><th>Comando</th><th>Descripción</th></tr>
+                <tr><td>A.T  <br> np.transpose(A)</td><td>Devuelve la transpuesta de la matriz.</td></tr>
+                <tr><td>A.reshape(n, m)</td><td>Cambia la forma (si es posible) sin modificar datos.</td></tr>
+                <tr><td>np.resize(A, (n,m))</td><td>Cambia tamaño, repitiendo datos si es necesario.</td></tr>
+            </table>
+
+            <h3>⚙️ Operaciones avanzadas (determinante, inversa, etc.)</h3>
+            <table class="cmd-table">
+                <tr><th>Comando (desde numpy.linalg)</th><th>Descripción</th></tr>
+                <tr><td>np.linalg.det(A)</td><td>Determinante de matriz cuadrada.</td></tr>
+                <tr><td>np.linalg.inv(A)</td><td>Inversa de matriz cuadrada (si existe).</td></tr>
+                <tr><td>np.linalg.matrix_power(A, n)</td><td>Potencia n-ésima (matriz cuadrada).</td></tr>
+                <tr><td>np.linalg.eig(A)</td><td>Autovalores y autovectores.</td></tr>
+                <tr><td>np.linalg.solve(A, b)</td><td>Resuelve sistema lineal A·x = b.</td></tr>
+                <tr><td>np.linalg.qr(A)</td><td>Descomposición QR.</td></tr>
+                <tr><td>np.linalg.svd(A)</td><td>Descomposición en valores singulares.</td></tr>
+            </table>
+
+            <h3>📥 Creación de matrices por usuario (ejemplo con listas)</h3>
+            <table class="cmd-table">
+                <tr><th>Método</th><th>Ejemplo</th></tr>
+                <tr><td>np.array([[1,2],[3,4]])</td><td>Crea matriz desde listas anidadas.</td></tr>
+                <tr><td>np.zeros((f,c))</td><td>Matriz de ceros.</td></tr>
+                <tr><td>np.ones((f,c))</td><td>Matriz de unos.</td></tr>
+                <tr><td>np.eye(n)</td><td>Matriz identidad n x n.</td></tr>
+                <tr><td>np.random.rand(f,c)</td><td>Matriz con uniformes [0,1).</td></tr>
+                <tr><td>construcción con input()</td><td>Ver PDF adjunto, se puede hacer con ciclos y float(input()).</td></tr>
+            </table>
+
+            <div class="note">
+                <strong>💡 Nota sobre diferentes tamaños:</strong> Para operar matrices de diferente tamaño, se puede usar broadcasting implícito (por ejemplo, sumar escalar o vector fila a matriz) o alinear dimensiones con <span class="code-inline">reshape</span>. Para producto matricial, la condición clásica: (n x m) @ (m x p) = (n x p). Para elemento a elemento las dimensiones deben ser idénticas o transmisibles (broadcast).
+            </div>
+        </div>
+
+        <!-- Pestaña 3: PDF Operaciones matrices embebido -->
+        <div class="tab-pane" id="pdf-operaciones">
+            <h2>📄 Vista del documento: "Operaciones_Y_Comandos_Para_Operar_Matrices_En_Phyton.pdf"</h2>
+            <iframe class="pdf-viewer" src="Operaciones_Y_Comandos_Para_Operar_Matrices_En_Phyton.pdf"></iframe>
+            <p style="margin-top: 12px; font-style: italic;">Si el PDF no se visualiza, puedes <a href="Operaciones_Y_Comandos_Para_Operar_Matrices_En_Phyton.pdf" target="_blank">descargarlo aquí</a>.</p>
+        </div>
+
+        <!-- Pestaña 4: PDF Tipos_De_Random embebido -->
+        <div class="tab-pane" id="pdf-random">
+            <h2>🎲 Vista del documento: "Tipos_De_Random.pdf"</h2>
+            <iframe class="pdf-viewer" src="Tipos_De_Random.pdf"></iframe>
+            <p style="margin-top: 12px; font-style: italic;">Si el PDF no se visualiza, puedes <a href="Tipos_De_Random.pdf" target="_blank">descargarlo aquí</a>.</p>
+        </div>
+    </div>
+</div>
+
+<script>
+    (function() {
+        const buttons = document.querySelectorAll('.tab-button');
+        const panes = document.querySelectorAll('.tab-pane');
+
+        function activateTab(tabId) {
+            // Desactivar todos
+            buttons.forEach(btn => btn.classList.remove('active'));
+            panes.forEach(pane => pane.classList.remove('active'));
+
+            // Activar el botón correspondiente
+            const activeButton = Array.from(buttons).find(btn => btn.dataset.tab === tabId);
+            if (activeButton) activeButton.classList.add('active');
+
+            // Activar el panel
+            const activePane = document.getElementById(tabId);
+            if (activePane) activePane.classList.add('active');
+        }
+
+        buttons.forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const tabId = btn.dataset.tab;
+                activateTab(tabId);
+                // Opcional: guardar última pestaña en localStorage
+                localStorage.setItem('lastTab', tabId);
+            });
+        });
+
+        // Cargar última pestaña visitada, si existe
+        const lastTab = localStorage.getItem('lastTab');
+        if (lastTab && document.getElementById(lastTab)) {
+            activateTab(lastTab);
+        } else {
+            // Por defecto historia
+            activateTab('historia');
+        }
+    })();
+</script>
+
+<!-- Nota: los archivos PDF deben estar en el mismo directorio que este HTML para que se incrusten correctamente.
+     Si están en otra ruta, editar el atributo src. -->
+</body>
+</html>
